@@ -39,15 +39,15 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Anti-Remix Protection: Kiểm tra định danh dự án duy nhất của bạn
+    // Protection check: Đảm bảo chỉ ứng dụng chính chủ mới chạy, bảo vệ quyền sở hữu của thanhminhhq@gmail.com & phungthanhhq@gmail.com
     const hostname = window.location.hostname;
     const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.') || hostname === '';
-    const isOwnerWorkspace = hostname.includes('vltxujjhizwkzsbis46chz-237226508957');
+    const isAuthorizedWorkspace = hostname.includes('vltxujjhizwkzsbis46chz-237226508957');
     
-    if (!isLocal && !isOwnerWorkspace) {
+    if (!isLocal && !isAuthorizedWorkspace) {
       setIsBlocked(true);
-      setIsInitializing(false);
-      return;
+    } else {
+      setIsBlocked(false);
     }
 
     // 1. Tải bảng xếp hạng
@@ -371,6 +371,41 @@ const App: React.FC = () => {
     }
   };
 
+  if (isBlocked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center border border-indigo-100 animate-scale-up">
+          <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl shadow-sm border border-rose-100">
+            🔒
+          </div>
+          <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">CẢNH BÁO BẢN QUYỀN</h2>
+          <p className="text-slate-600 text-xs mb-4 leading-relaxed font-medium">
+            Ứng dụng <strong className="text-indigo-600 font-extrabold">BẠN ĐỒNG HÀNH</strong> thuộc quyền sở hữu trí tuệ và bảo hộ thương hiệu độc quyền của đồng chủ sở hữu:
+          </p>
+
+          <div className="bg-indigo-50/80 border border-indigo-100 p-3.5 rounded-2xl mb-5 text-xs font-bold text-indigo-950 space-y-1.5 shadow-sm">
+            <p className="flex items-center justify-center gap-1.5">
+              <span>✉️</span>
+              <span className="font-mono text-indigo-700">thanhminhhq@gmail.com</span>
+            </p>
+            <p className="flex items-center justify-center gap-1.5">
+              <span>✉️</span>
+              <span className="font-mono text-indigo-700">phungthanhhq@gmail.com</span>
+            </p>
+          </div>
+
+          <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-2xl text-xs text-left leading-relaxed font-medium mb-6">
+            ⚠️ <strong>Phát hiện sao chép trái phép:</strong> Dự án này vừa được Remix hoặc nhân bản sang không gian làm việc chưa được ủy quyền. Hệ thống đã tiến hành vô hiệu hóa toàn bộ tính năng cốt lõi cùng các tích hợp AI để bảo vệ bản quyền công nghệ.
+          </div>
+
+          <p className="text-[11px] text-slate-400 font-medium leading-normal">
+            Vui lòng liên hệ trực tiếp với chủ sở hữu chính thức qua Gmail trên để nhận liên kết trải nghiệm ứng dụng bản quyền gốc.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-start py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
       <div className={`w-full transition-all duration-300 ${getMaxWidthClass()}`}>
@@ -379,7 +414,9 @@ const App: React.FC = () => {
             BẠN <span className="text-indigo-600">ĐỒNG HÀNH</span>
           </h1>
           <p className="text-slate-500 font-medium italic">Học tập thông minh - Khẳng định tài năng</p>
-          <p className="text-slate-400 text-xs mt-1 font-medium">Ứng dụng được tạo và phát triển bởi Phùng Thanh AI</p>
+          <p className="text-slate-400 text-xs mt-1 font-medium">
+            Ứng dụng được tạo và phát triển bởi Phùng Thanh AI (thanhminhhq@gmail.com & phungthanhhq@gmail.com)
+          </p>
 
           <div className="flex items-center justify-center gap-2 mt-3">
             <button
