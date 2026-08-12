@@ -30,7 +30,6 @@ const App: React.FC = () => {
   const [summary, setSummary] = useState<string | null>(null);
   const [essayQuestions, setEssayQuestions] = useState<EssayQuestion[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isBlocked, setIsBlocked] = useState(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const [isCustomKeyActive, setIsCustomKeyActive] = useState(false);
 
@@ -39,17 +38,6 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Protection check: Đảm bảo chỉ ứng dụng chính chủ mới chạy, bảo vệ quyền sở hữu của thanhminhhq@gmail.com & phungthanhhq@gmail.com
-    const hostname = window.location.hostname;
-    const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.') || hostname === '';
-    const isAuthorizedWorkspace = hostname.includes('vltxujjhizwkzsbis46chz-237226508957');
-    
-    if (!isLocal && !isAuthorizedWorkspace) {
-      setIsBlocked(true);
-    } else {
-      setIsBlocked(false);
-    }
-
     // 1. Tải bảng xếp hạng
     let loadedLeaderboard: LeaderboardEntry[] = [];
     const savedLeaderboard = localStorage.getItem(LEADERBOARD_KEY);
@@ -247,34 +235,6 @@ const App: React.FC = () => {
     setError(null);
   };
 
-  if (isBlocked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-        <div className="max-w-md w-full space-y-6 bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-rose-100 text-center">
-          <div className="flex flex-col items-center">
-            <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center text-4xl mb-4 animate-bounce">
-              🔒
-            </div>
-            <h2 className="text-2xl font-extrabold text-rose-650 tracking-tight text-slate-800 uppercase">Cảnh báo Bản quyền</h2>
-            <p className="text-slate-600 text-sm mt-3 leading-relaxed">
-              Ứng dụng <strong className="text-indigo-600">BẠN ĐỒNG HÀNH</strong> thuộc quyền sở hữu trí tuệ và bảo hộ thương hiệu độc quyền của <strong className="text-slate-800">phungthanhhq@gmail.com</strong>.
-            </p>
-            
-            <div className="w-full bg-rose-50/50 border border-rose-100 p-4 rounded-2xl mt-5 text-left">
-              <p className="text-xs text-rose-700 leading-relaxed font-medium">
-                ⚠️ <strong>Phát hiện sao chép trái phép:</strong> Dự án này vừa được Remix hoặc nhân bản sang không gian làm việc khác. Hệ thống đã tiến hành vô hiệu hóa toàn bộ tính năng cốt lõi cùng các tích hợp AI để bảo vệ bản quyền công nghệ.
-              </p>
-            </div>
-            
-            <p className="text-slate-400 text-xs mt-6 italic">
-              Vui lòng liên hệ với chủ sở hữu chính thức để nhận liên kết trải nghiệm được ủy quyền.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   if (isInitializing) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -370,41 +330,6 @@ const App: React.FC = () => {
         return 'max-w-2xl';
     }
   };
-
-  if (isBlocked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center border border-indigo-100 animate-scale-up">
-          <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl shadow-sm border border-rose-100">
-            🔒
-          </div>
-          <h2 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">CẢNH BÁO BẢN QUYỀN</h2>
-          <p className="text-slate-600 text-xs mb-4 leading-relaxed font-medium">
-            Ứng dụng <strong className="text-indigo-600 font-extrabold">BẠN ĐỒNG HÀNH</strong> thuộc quyền sở hữu trí tuệ và bảo hộ thương hiệu độc quyền của đồng chủ sở hữu:
-          </p>
-
-          <div className="bg-indigo-50/80 border border-indigo-100 p-3.5 rounded-2xl mb-5 text-xs font-bold text-indigo-950 space-y-1.5 shadow-sm">
-            <p className="flex items-center justify-center gap-1.5">
-              <span>✉️</span>
-              <span className="font-mono text-indigo-700">thanhminhhq@gmail.com</span>
-            </p>
-            <p className="flex items-center justify-center gap-1.5">
-              <span>✉️</span>
-              <span className="font-mono text-indigo-700">phungthanhhq@gmail.com</span>
-            </p>
-          </div>
-
-          <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-2xl text-xs text-left leading-relaxed font-medium mb-6">
-            ⚠️ <strong>Phát hiện sao chép trái phép:</strong> Dự án này vừa được Remix hoặc nhân bản sang không gian làm việc chưa được ủy quyền. Hệ thống đã tiến hành vô hiệu hóa toàn bộ tính năng cốt lõi cùng các tích hợp AI để bảo vệ bản quyền công nghệ.
-          </div>
-
-          <p className="text-[11px] text-slate-400 font-medium leading-normal">
-            Vui lòng liên hệ trực tiếp với chủ sở hữu chính thức qua Gmail trên để nhận liên kết trải nghiệm ứng dụng bản quyền gốc.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start py-8 px-4 sm:px-6 lg:px-8 bg-slate-50/50">
